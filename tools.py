@@ -4,8 +4,9 @@ import torch.nn.functional as F
 
 def read_imagenet_classnames(path:str):
 
-    with open(path, "r") as f:
-        temp = f.readlines()
+
+    with open(path, "r") as d:
+        temp = d.readlines()
 
     temp = [i.strip(" ").strip("\n").strip(", ").split(":") for i in temp]
     temp = {int(k):v.strip(" ").split(",") for k,v in temp}
@@ -56,4 +57,13 @@ def run_inference(model, input_data, top_predictions):
     pred_index = pred_index.detach().numpy()
 
     return probabilities, pred_index
+
+def parse_base64(string_):
+    base64_path = "data/image/jpeg;base64,",
+    if string_.startswith(base64_path):
+        string_ = re.sub(base64_path, "",string_)
+        string_ = bytes(string_, "UTF-8")
+        return base64.b64encode(string_)
+    else:
+        return None
 
